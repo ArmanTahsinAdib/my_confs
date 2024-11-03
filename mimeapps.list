@@ -1,0 +1,34 @@
+[Default Applications]
+inode/directory=thunar.desktop
+image/png=swappy.desktop
+image/jpeg=swappy.desktop
+text/plain=nvim.desktop
+video/webm=vlc.desktop
+text/x-script.python=nvim.desktop
+inode/x-empty=nvim.desktop
+text/x-c=nvim.desktop
+text/html=google.chrome.desktop
+application/x-pie-executable=nvim.desktop
+application/vnd.oasis.opendocument.text=libreoffice-writer.desktop
+application/pdf=google.chrome.desktop
+application/vnd.oasis.opendocument.spreadsheet=libreoffice-calc.desktop
+application/vnd.oasis.opendocument.presentation=libreoffice-impress.desktop
+text/xml=nvim.desktop
+application/json=nvim.desktop
+text/csv=nvim.desktop
+application/javascript=nvim.desktop
+x-scheme-handler/mailto=userapp-Thunderbird-1I9RV2.desktop
+message/rfc822=userapp-Thunderbird-1I9RV2.desktop
+x-scheme-handler/mid=userapp-Thunderbird-1I9RV2.desktop
+x-scheme-handler/webcal=userapp-Thunderbird-I8KRV2.desktop
+text/calendar=userapp-Thunderbird-I8KRV2.desktop
+application/x-extension-ics=userapp-Thunderbird-I8KRV2.desktop
+x-scheme-handler/webcals=userapp-Thunderbird-I8KRV2.desktop
+.md=markdown-app.desktop
+
+[Added Associations]
+x-scheme-handler/mailto=userapp-Thunderbird-1I9RV2.desktop;
+x-scheme-handler/mid=userapp-Thunderbird-1I9RV2.desktop;
+x-scheme-handler/webcal=userapp-Thunderbird-I8KRV2.desktop;
+x-scheme-handler/webcals=userapp-Thunderbird-I8KRV2.desktop;
+text/x-cmake=neovide.desktop;

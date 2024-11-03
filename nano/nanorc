@@ -1,0 +1,7 @@
+set indicator
+set linenumbers
+set minibar
+set mouse
+set nohelp
+set nowrap
+set tabsize 2
