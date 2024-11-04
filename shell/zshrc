@@ -37,8 +37,16 @@ export YSU_MESSAGE_POSITION="after"
 export ZOXIDE_CMD_OVERRIDE="cd"
 export EDITOR=nvim
 export BROWSER=google-chrome
-export FZF_DEFAULT_OPTS="--inline-info --bind 'ctrl-/:change-preview-window(hidden|)'  --wrap --wrap-sign='↳ ' "
-export SHELL=/usr/bin/zsh
+export FZF_DEFAULT_OPTS="\
+  --inline-info \
+  --bind 'ctrl-/:change-preview-window(hidden|)'\
+  --wrap --wrap-sign='↳ ' \
+  --color=bg+:#313244,bg:#1e1e2e,spinner:#f5e0dc,hl:#f38ba8 \
+  --color=fg:#cdd6f4,header:#f38ba8,info:#cba6f7,pointer:#f5e0dc \
+  --color=marker:#b4befe,fg+:#cdd6f4,prompt:#cba6f7,hl+:#f38ba8 \
+  --color=selected-bg:#45475a \
+  "
+  export SHELL=/usr/bin/zsh
 
 # ----- Dracula Man theme -----
 export MANPAGER="/usr/bin/less -s -M +Gg"
@@ -79,6 +87,49 @@ bindkey -s '^B' "btop\n"
 bindkey -s '^Y' "yazi\n"
 
 
+
+# function command_not_found_handler {
+#   local purple='\e[1;35m' bright='\e[1m' green='\e[1;32m' red='\e[1;31m' reset='\e[0m'
+#   printf "${red}zsh:${reset} command not found: %s\n" "$1"
+#
+#   # Search in official repos
+#   local entries=( ${(f)"$(/usr/bin/pacman -F --machinereadable -- "/usr/bin/$1")"} )
+#   if (( ${#entries[@]} )) ; then
+#     printf "${bright}$1${reset} may be available in the following packages from the official repos:\n"
+#     local pkg
+#     for entry in "${entries[@]}" ; do
+#       local fields=( ${(0)entry} )
+#       if [[ "$pkg" != "${fields[2]}" ]]; then
+#         printf "  ${purple}%s/${bright}%s ${green}%s${reset}\n" "${fields[1]}" "${fields[2]}" "${fields[3]}"
+#       fi
+#       printf "    /%s\n" "${fields[4]}"
+#       pkg="${fields[2]}"
+#     done
+#     printf "${green}Hint:${reset} You can install it with 'sudo pacman -S <package-name>'\n"
+#     return 127
+#   fi
+#
+#   # Search in the AUR using paru
+#   local aur_entries=( ${(f)"$(paru -F --machinereadable -- "/usr/bin/$1")"} )
+#   if (( ${#aur_entries[@]} )) ; then
+#     printf "${bright}$1${reset} may be available in the following AUR packages:\n"
+#     local aur_pkg
+#     for entry in "${aur_entries[@]}" ; do
+#       local aur_fields=( ${(0)entry} )
+#       if [[ "$aur_pkg" != "${aur_fields[2]}" ]]; then
+#         printf "  ${purple}%s/${bright}%s ${green}%s${reset}\n" "${aur_fields[1]}" "${aur_fields[2]}" "${aur_fields[3]}"
+#       fi
+#       printf "    /%s\n" "${aur_fields[4]}"
+#       aur_pkg="${aur_fields[2]}"
+#     done
+#     printf "${green}Hint:${reset} You can install it with 'paru -S <package-name>'\n"
+#     return 127
+#   fi
+#
+#   # If no package is found in either
+#   printf "${red}No package found${reset} containing ${bright}%s${reset}\n" "$1"
+#   return 127
+# }
 
 function command_not_found_handler {
   local purple='\e[1;35m' bright='\e[0;1m' green='\e[1;32m' reset='\e[0m'
@@ -132,12 +183,13 @@ eval "$(starship init zsh)"
 eval "$(zoxide init zsh)"
 eval "$(fzf --zsh)"
 eval "$(zoxide init --cmd cd zsh)"
-AUTO_NOTIFY_IGNORE+=("docker" "man" "xdg-open" "code" "btop" "lazygit" "yazi" "tmux" "tty-clock" "cava" "pipes.sh" "toipe" "git" "ts" "less" "batman" "batdiff" "fish" "bash" "python3" "python" "zsh")
+AUTO_NOTIFY_IGNORE+=("docker" "man" "xdg-open" "code" "btop" "lazygit" "yazi" "tmux" "tty-clock" "cava" "pipes.sh" "toipe" "git" "ts" "less" "batman" "batdiff" "fish" "bash" "python3" "python" "zsh" "cmatrix" )
 
 
 # ------------------ fzf config --------------------------------------------
-export FZF_CTRL_T_OPTS="--preview '~/fzf-preview.sh {}' --bind 'ctrl-/:change-preview-window(hidden|)' --wrap --wrap-sign='↳ ' --height=60% --ansi"
-export FZF_ALT_C_OPTS="--preview 'eza -G --color=always {}' --border sharp --bind 'ctrl-/:change-preview-window(hidden|)' --wrap --wrap-sign='↳ ' --height=50% --preview-window down,20%,border-sharp"
+export FZF_CTRL_T_OPTS="--preview '~/fzf-preview.sh {}' --bind 'ctrl-/:change-preview-window(hidden|)' --wrap --wrap-sign='↳ ' --height=60% --ansi -e --algo=v1 --scheme=path"
+export FZF_ALT_C_OPTS="--preview 'eza -G --color=always {}' --border sharp --bind 'ctrl-/:change-preview-window(hidden|)' --wrap --wrap-sign='↳ ' --height=50% --preview-window down,20%,border-sharp -e --algo=v1 "
+export FZF_CTRL_R_OPTS="--reverse -e"
 
 _fzf_comprun() {
   local command=$1
@@ -148,27 +200,27 @@ _fzf_comprun() {
     export|unset) fzf --preview "eval 'echo \$' {}"     "$@" ;;
     ssh)          fzf --preview "dig {}"    "$@" ;;
     unalias)      fzf --preview "alias {}"   "$@"  ;;
-    *)            fzf --preview "~/fzf-preview.sh {}"  "$@" ;;
+    *)            fzf --algo v1 --preview "~/fzf-preview.sh {}"  "$@" ;;
   esac
 }
 
 
 # -- FZF
-export FZF_DEFAULT_COMMAND="fd --hidden --exclude .git"
+export FZF_DEFAULT_COMMAND="fd --hidden --exclude .git --type f"
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_ALT_C_COMMAND="fd --type=d  --hidden --strip-cwd-prefix --exclude .git"
 
 _fzf_compgen_path() {
-  fd --hidden --exclude .git . "$1"
+  fd --hidden --exclude .git --type f "$1"
 }
 
 _fzf_comprun_dir() {
   fd --type=d --hidden --exclude .git . "$1"
 }
 
-echo -e "\033[32m$(fortune -s)\033[0m"
 
 # typeset -g POWERLEVEL9K_INSTANT_PROMPT=off
 
 source ~/fzf-git.sh
 export PATH=$PATH:~/.local/bin
+echo -e "\033[32m$(fortune -s)\033[0m"
